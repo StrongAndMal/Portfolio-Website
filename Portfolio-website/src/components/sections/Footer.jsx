@@ -83,6 +83,9 @@ const Footer = () => {
                 </a>
               ))}
             </div>
+            <div className="flex justify-center mt-6">
+              {/* Logo removed as requested */}
+            </div>
           </div>
 
           {/* Quick Links - Middle */}

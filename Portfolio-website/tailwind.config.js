@@ -9,7 +9,7 @@ export default {
       colors: {
         primary: "#9c5b5b",
         secondary: "#100e0e",
-        background: "#2b2d42",
+        background: "#1c1c1c",
       },
       keyframes: {
         blink: {
