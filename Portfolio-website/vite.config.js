@@ -5,7 +5,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: process.env.NODE_ENV === "production" ? "/" : "/Portfolio-Website",
+  base: "/",
   build: {
     assetsInclude: [
       "**/*.pdf",
@@ -14,6 +14,12 @@ export default defineConfig({
       "**/*.jpeg",
       "**/*.JPEG",
     ],
+    rollupOptions: {
+      external: [],
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
   server: {
     hmr: {
