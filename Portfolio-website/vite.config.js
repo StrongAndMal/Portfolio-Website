@@ -5,13 +5,19 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/Portfolio-Website",
+  base: process.env.NODE_ENV === "production" ? "/" : "/Portfolio-Website",
   build: {
-    assetsInclude: ["**/*.pdf"],
+    assetsInclude: [
+      "**/*.pdf",
+      "**/*.JPG",
+      "**/*.jpg",
+      "**/*.jpeg",
+      "**/*.JPEG",
+    ],
   },
   server: {
     hmr: {
       overlay: false,
     },
   },
-}); 
+});

@@ -1,31 +1,14 @@
 import React, { useState, useEffect } from "react";
-import profileImage from "../../assets/images/IMG_9158_Original.JPG";
-import secondImage from "../../assets/images/IMG_0646.jpg";
-import image3 from "../../assets/images/IMG_3057.JPG";
-import image4 from "../../assets/images/IMG_3739.JPG";
 import { RevealOnScroll } from "../RevealOnScroll";
-
-const images = [
-  {
-    src: profileImage,
-    caption: "Selfie",
-  },
-  {
-    src: secondImage,
-    caption: "Creating Memories",
-  },
-  {
-    src: image3,
-    caption: "One Night in Bangkok",
-  },
-  {
-    src: image4,
-    caption: "Life's Journey",
-  },
-];
 
 export const Home = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const images = [
+    "/images/IMG_9158_Original.JPG",
+    "/images/IMG_0646.jpg",
+    "/images/IMG_3057.JPG",
+    "/images/IMG_3739.JPG",
+  ];
   const [hovered, setHovered] = useState(null);
 
   const nextImage = () => {
@@ -115,8 +98,8 @@ export const Home = () => {
           <div className="flex-1 flex flex-col items-center justify-center mt-12 md:mt-0">
             <div className="relative group">
               <img
-                src={images[currentImageIndex].src}
-                alt={images[currentImageIndex].caption}
+                src={images[currentImageIndex]}
+                alt={`Image ${currentImageIndex + 1}`}
                 className="w-64 h-80 object-cover bg-white border-8 border-white shadow-xl polaroid-img"
               />
               <button
@@ -154,5 +137,3 @@ export const Home = () => {
     </section>
   );
 };
-
-export default Home;
