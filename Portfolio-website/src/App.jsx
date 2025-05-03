@@ -14,7 +14,7 @@ import Footer from "./components/sections/Footer";
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-[#161616] text-white">
+      <div className="min-h-screen bg-background text-white">
         <LoadingScreen />
         <NavBar />
         <main>

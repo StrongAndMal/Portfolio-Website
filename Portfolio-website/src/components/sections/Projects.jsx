@@ -6,7 +6,7 @@ export const Projects = () => {
   return (
     <section
       id="projects"
-      className="min-h-screen py-24 bg-[#161616] relative overflow-hidden"
+      className="min-h-screen py-24 relative overflow-hidden"
     >
       <RevealOnScroll>
         <div className="container mx-auto px-4">

@@ -6,13 +6,14 @@ export const LoadingScreen = () => {
   const [isVisible, setIsVisible] = useState(true);
 
   const texts = [
-    "Greetings",
-    "I am Mauro",
-    "A Jr. Full Stack Developer",
-    "A Fitness Influencer",
-    "A Musician / DJ",
-    "A Content Creator",
-    "And a Traveler & Entrepreneur",
+    "Hey there!",
+    "Welcome to my portfolio",
+    "Take a look around",
+    "I'm just 3 months into my journey",
+    "But growing fast",
+    "Hope you enjoy my work",
+    "Thank you for visiting",
+    "🤍",
   ];
 
   useEffect(() => {

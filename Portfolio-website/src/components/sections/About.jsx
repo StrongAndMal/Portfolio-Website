@@ -11,6 +11,7 @@ import {
   SiVercel,
 } from "react-icons/si";
 import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope } from "react-icons/fa";
+import aboutIcon from "../../assets/icons/icons8-about.svg";
 
 const SkillIcon = ({ Icon, name, color }) => {
   return (
@@ -74,7 +75,7 @@ export const About = () => {
   return (
     <section
       id="about"
-      className="py-24 min-h-screen bg-[#161616] text-white/80 relative overflow-hidden"
+      className="py-24 min-h-screen text-white/80 relative overflow-hidden"
     >
       {/* Large background text */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
@@ -84,7 +85,9 @@ export const About = () => {
       </div>
 
       <div className="container mx-auto px-4 max-w-6xl relative z-10">
-        <h2 className="text-7xl font-bold mb-16 text-white">ABOUT</h2>
+        <div className="flex items-center gap-4 mb-16">
+          <h2 className="text-7xl font-bold text-white">ABOUT</h2>
+        </div>
 
         {/* Main content grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -179,9 +182,22 @@ export const About = () => {
             </p>
 
             <p className="text-sm text-white/60">
-              Based in Los Angeles, California. Fluent in English, and Spanish.
-              Studying at CodeCademy.
+              Based in Los Angeles, California.
             </p>
+
+            {/* Language and Tech Stack Border Boxes */}
+            <div className="flex flex-col gap-6 mt-8">
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-8 py-6 text-2xl font-bold text-white/90 shadow-md transition-all duration-300 hover:scale-105 hover:border-white/30 hover:shadow-lg cursor-pointer">
+                Fluent in <span className="text-white">English & Spanish</span>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-8 py-6 text-2xl font-bold text-white/90 shadow-md transition-all duration-300 hover:scale-105 hover:border-white/30 hover:shadow-lg cursor-pointer flex items-center gap-3">
+                My Current Tech-Stack is:{" "}
+                <span className="text-white flex items-center gap-2">
+                  REACT
+                  <SiReact className="w-8 h-8 text-[#61DAFB] transition-transform duration-500 group-hover:animate-spin-slow" />
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 

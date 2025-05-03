@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { RevealOnScroll } from "../RevealOnScroll";
+import confetti from "canvas-confetti";
 
 export const Experience = () => {
+  const [hasPlayedConfetti, setHasPlayedConfetti] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(null);
+  const currentJobNodeRef = useRef(null);
+
   const experiences = [
     {
       year: "2024 - Present",
       title: "Junior Full Stack Developer",
       company: "DigitalMal LLC",
       description:
-        "Building modern web applications with a focus on user experience and performance. Implementing responsive designs and efficient backend solutions.",
+        "A new company that I've created and working for, I am building modern web applications with a focus on user experience and performance. Implementing responsive designs and efficient backend solutions.",
       skills: [
         "React",
         "Node.js",
@@ -128,107 +133,203 @@ export const Experience = () => {
     },
   ];
 
+  // Track scroll position to update active timeline indicator
+  useEffect(() => {
+    const handleScroll = () => {
+      const timelineNodes = document.querySelectorAll(".timeline-node");
+
+      let closestIndex = null;
+      let closestDistance = Infinity;
+
+      timelineNodes.forEach((node, index) => {
+        const rect = node.getBoundingClientRect();
+        const distanceToCenter = Math.abs(
+          rect.top + rect.height / 2 - window.innerHeight / 2
+        );
+
+        if (distanceToCenter < closestDistance) {
+          closestDistance = distanceToCenter;
+          closestIndex = index;
+        }
+      });
+
+      setActiveIndex(closestIndex);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Initialize on mount
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Trigger confetti via IntersectionObserver on current job node
+  useEffect(() => {
+    if (hasPlayedConfetti) return;
+    if (!currentJobNodeRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasPlayedConfetti) {
+          setHasPlayedConfetti(true);
+          const rect = entry.target.getBoundingClientRect();
+          confetti({
+            particleCount: 100,
+            spread: 50,
+            origin: {
+              x: rect.left / window.innerWidth,
+              y: rect.top / window.innerHeight,
+            },
+            colors: ["#ffffff", "#61DAFB", "#f0db4f", "#ff4081"],
+            scalar: 0.7,
+          });
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(currentJobNodeRef.current);
+    return () => observer.disconnect();
+  }, [hasPlayedConfetti]);
+
+  // Clone and reverse the experiences array to show oldest first
+  const chronologicalExperiences = [...experiences].reverse();
+
   return (
     <section
       id="experience"
-      className="min-h-screen py-24 bg-[#161616] relative overflow-hidden"
+      className="min-h-screen py-24 relative overflow-hidden"
     >
       <div className="container mx-auto px-4">
-        <h2 className="text-7xl font-bold mb-16 text-white">Experience</h2>
+        <h2 className="text-7xl font-bold mb-16 text-white">My Experience</h2>
 
         <div className="relative">
-          {/* Tree line path */}
+          {/* Tree line path with glow effect */}
           <div className="absolute left-8 top-0 bottom-0 w-1 bg-white/10"></div>
+          <div
+            className="absolute left-8 top-0 w-1 bg-white/30 z-10 timeline-progress-indicator transition-all duration-300"
+            style={{
+              height: `${
+                activeIndex !== null
+                  ? ((activeIndex + 1) / chronologicalExperiences.length) * 100
+                  : 0
+              }%`,
+              boxShadow: "0 0 10px 2px rgba(255, 255, 255, 0.3)",
+            }}
+          ></div>
 
           <div className="space-y-16 pl-16">
-            {experiences.map((exp, index) => (
-              <div key={index} className="relative group">
-                {/* Tree node */}
-                <div className="absolute -left-16 top-6 w-8 h-8 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors duration-300 flex items-center justify-center">
-                  <div className="w-4 h-4 rounded-full bg-white/20 group-hover:bg-white/40 transition-colors duration-300"></div>
+            {chronologicalExperiences.map((exp, index) => (
+              <div
+                key={index}
+                className="relative group"
+                ref={exp.isCurrent ? currentJobNodeRef : null}
+              >
+                {/* Tree node with glow effect for active node */}
+                <div
+                  className={`timeline-node absolute -left-16 top-6 w-8 h-8 rounded-full 
+                    ${activeIndex === index ? "bg-white/30" : "bg-white/10"} 
+                    transition-all duration-300 flex items-center justify-center
+                    ${activeIndex === index ? "shadow-glow" : ""}
+                    ${exp.isCurrent ? "current-job-node" : ""}`}
+                  style={{
+                    boxShadow:
+                      activeIndex === index
+                        ? "0 0 15px 5px rgba(255, 255, 255, 0.2)"
+                        : "none",
+                  }}
+                >
+                  <div
+                    className={`w-4 h-4 rounded-full 
+                      ${activeIndex === index ? "bg-white/70" : "bg-white/20"} 
+                      transition-all duration-300`}
+                  ></div>
                 </div>
 
-                {/* Content */}
-                <div className="bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-white/10 group-hover:border-white/20 transition-all duration-300">
-                  <div className="flex items-center gap-4 mb-2">
-                    <span className="text-xl font-bold text-white/60">
-                      {exp.year}
-                    </span>
-                    {exp.isCurrent && (
-                      <span className="px-3 py-1 text-sm font-medium bg-white/10 text-white rounded-full">
-                        I am here!
+                {/* Content with animation */}
+                <RevealOnScroll>
+                  <div
+                    className={`bg-white/5 backdrop-blur-sm p-6 rounded-lg border 
+                    ${
+                      activeIndex === index
+                        ? "border-white/30"
+                        : "border-white/10"
+                    } 
+                    group-hover:border-white/20 transition-all duration-300 
+                    ${
+                      exp.isCurrent
+                        ? "ring-2 ring-white/30 ring-offset-2 ring-offset-[#161616]"
+                        : ""
+                    }`}
+                  >
+                    <div className="flex items-center gap-4 mb-2">
+                      <span className="text-xl font-bold text-white/60">
+                        {exp.year}
                       </span>
+                      {exp.isCurrent && (
+                        <span className="px-3 py-1 text-sm font-medium bg-white/10 text-white rounded-full animate-pulse">
+                          I am here!
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 className="text-xl font-bold text-white mb-1">
+                      {exp.title}
+                    </h3>
+                    <p className="text-white/60 mb-1">{exp.company}</p>
+                    {exp.location && (
+                      <p className="text-white/40 mb-2">{exp.location}</p>
                     )}
+
+                    <p className="text-white/80 mb-3 text-sm">
+                      {exp.description}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2">
+                      {exp.skills.map((skill, skillIndex) => (
+                        <span
+                          key={skillIndex}
+                          className="px-2 py-1 text-xs bg-white/5 text-white/60 rounded-full"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-
-                  <h3 className="text-xl font-bold text-white mb-1">
-                    {exp.title}
-                  </h3>
-                  <p className="text-white/60 mb-1">{exp.company}</p>
-                  {exp.location && (
-                    <p className="text-white/40 mb-2">{exp.location}</p>
-                  )}
-
-                  <p className="text-white/80 mb-3 text-sm">
-                    {exp.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2">
-                    {exp.skills.map((skill, skillIndex) => (
-                      <span
-                        key={skillIndex}
-                        className="px-2 py-1 text-xs bg-white/5 text-white/60 rounded-full"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                </RevealOnScroll>
               </div>
             ))}
           </div>
         </div>
 
-        <h2 className="text-7xl font-bold mt-24 mb-16 text-white">Education</h2>
+        <h2 className="text-7xl font-bold mt-24 mb-16 text-white">
+          My Education
+        </h2>
 
-        <div className="relative">
-          {/* Tree line path */}
-          <div className="absolute left-8 top-0 bottom-0 w-1 bg-white/10"></div>
-
-          <div className="space-y-16 pl-16">
-            {education.map((edu, index) => (
-              <div key={index} className="relative group">
-                {/* Tree node */}
-                <div className="absolute -left-16 top-6 w-8 h-8 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors duration-300 flex items-center justify-center">
-                  <div className="w-4 h-4 rounded-full bg-white/20 group-hover:bg-white/40 transition-colors duration-300"></div>
-                </div>
-
-                {/* Content */}
-                <div className="bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-white/10 group-hover:border-white/20 transition-all duration-300">
-                  <div className="flex items-center gap-4 mb-2">
-                    <span className="text-xl font-bold text-white/60">
-                      {edu.year}
-                    </span>
-                    {edu.isCurrent && (
-                      <span className="px-3 py-1 text-sm font-medium bg-white/10 text-white rounded-full">
-                        Currently Studying
-                      </span>
-                    )}
-                  </div>
-
-                  <h3 className="text-xl font-bold text-white mb-1">
-                    {edu.title}
-                  </h3>
-                  <p className="text-white/60 mb-1">{edu.school}</p>
-                  {edu.location && (
-                    <p className="text-white/40 mb-2">{edu.location}</p>
-                  )}
-
-                  <p className="text-white/80 text-sm">{edu.description}</p>
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          {education.map((edu, index) => (
+            <div
+              key={index}
+              className="bg-white/5 border border-white/10 rounded-2xl shadow-md p-8 transition-all duration-300 hover:scale-105 hover:border-white/30 hover:shadow-lg group cursor-pointer"
+            >
+              <div className="flex items-center gap-4 mb-2">
+                <span className="text-xl font-bold text-white/60">
+                  {edu.year}
+                </span>
+                {edu.isCurrent && (
+                  <span className="px-3 py-1 text-sm font-medium bg-white/10 text-white rounded-full animate-pulse">
+                    Currently Studying
+                  </span>
+                )}
               </div>
-            ))}
-          </div>
+              <h3 className="text-xl font-bold text-white mb-1">{edu.title}</h3>
+              <p className="text-white/60 mb-1">{edu.school}</p>
+              {edu.location && (
+                <p className="text-white/40 mb-2">{edu.location}</p>
+              )}
+              <p className="text-white/80 text-sm">{edu.description}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

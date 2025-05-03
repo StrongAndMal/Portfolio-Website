@@ -15,15 +15,6 @@ export const NavBar = () => {
   const deleteSpeed = 50;
   const emptyPause = 1000;
 
-  const handleDownloadCV = () => {
-    const link = document.createElement("a");
-    link.href = "/cv/Mauro_Alvarado_CV.pdf";
-    link.download = "Mauro_Alvarado_CV.pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   const handleNavClick = (e, id) => {
     e.preventDefault();
     const element = document.getElementById(id);
@@ -36,7 +27,7 @@ export const NavBar = () => {
     { id: "about", label: "About" },
     { id: "experience", label: "Experience" },
     { id: "projects", label: "Projects" },
-    { id: "cv", label: "CV", onClick: handleDownloadCV },
+    { id: "cv", label: "CV", isDownload: true },
   ];
 
   // Debounced resize handler
@@ -116,9 +107,44 @@ export const NavBar = () => {
     };
   }, [isMobile]);
 
+  const handleDownloadCV = async () => {
+    try {
+      // Use direct relative path to the file
+      const fileUrl = "/Portfolio-Website/Mauro_Alvarado_CV.pdf";
+
+      // Fetch the file
+      const response = await fetch(fileUrl);
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch CV: ${response.status} ${response.statusText}`
+        );
+      }
+
+      // Convert to blob
+      const blob = await response.blob();
+
+      // Create a download link
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = "Mauro_Alvarado_CV.pdf";
+
+      // Append to the body, trigger click and clean up
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error("Download failed:", error);
+      // Optional: show error to user
+      alert("Failed to download CV. Please try again later.");
+    }
+  };
+
   return (
     <>
-      <nav className="bg-[#161616]/80 backdrop-blur-sm border-b border-white/10">
+      <nav className="backdrop-blur-sm">
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             {/* Username */}
@@ -138,23 +164,39 @@ export const NavBar = () => {
             {!isMobile && (
               <div className="flex-1 flex justify-center">
                 <div className="flex items-center space-x-12">
-                  {navItems.map((item) => (
-                    <a
-                      key={item.id}
-                      href={item.onClick ? undefined : `#${item.id}`}
-                      onClick={
-                        item.onClick || ((e) => handleNavClick(e, item.id))
-                      }
-                      className="text-white/60 hover:text-white transition-colors duration-300 relative group cursor-pointer"
-                      onMouseEnter={() => setHoveredItem(item.id)}
-                      onMouseLeave={() => setHoveredItem(null)}
-                    >
-                      <span className="relative inline-block">
-                        {item.label}
-                        <span className="absolute bottom-0 left-0 w-full h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                      </span>
-                    </a>
-                  ))}
+                  {navItems.map((item) =>
+                    item.isDownload ? (
+                      <a
+                        key={item.id}
+                        href="/Portfolio-Website/Mauro_Alvarado_CV.pdf"
+                        download="Mauro_Alvarado_CV.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white/60 hover:text-white transition-colors duration-300 relative group cursor-pointer"
+                        onMouseEnter={() => setHoveredItem(item.id)}
+                        onMouseLeave={() => setHoveredItem(null)}
+                      >
+                        <span className="relative inline-block">
+                          {item.label}
+                          <span className="absolute bottom-0 left-0 w-full h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                        </span>
+                      </a>
+                    ) : (
+                      <a
+                        key={item.id}
+                        href={`#${item.id}`}
+                        onClick={(e) => handleNavClick(e, item.id)}
+                        className="text-white/60 hover:text-white transition-colors duration-300 relative group cursor-pointer"
+                        onMouseEnter={() => setHoveredItem(item.id)}
+                        onMouseLeave={() => setHoveredItem(null)}
+                      >
+                        <span className="relative inline-block">
+                          {item.label}
+                          <span className="absolute bottom-0 left-0 w-full h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                        </span>
+                      </a>
+                    )
+                  )}
                 </div>
               </div>
             )}

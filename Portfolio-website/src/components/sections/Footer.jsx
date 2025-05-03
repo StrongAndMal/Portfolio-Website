@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   FaGithub,
   FaLinkedin,
-  FaTwitter,
   FaYoutube,
   FaTiktok,
   FaInstagram,
@@ -29,16 +28,31 @@ const Footer = () => {
   };
 
   const socialLinks = [
-    { icon: FaGithub, url: "#", label: "GitHub" },
-    { icon: FaLinkedin, url: "#", label: "LinkedIn" },
-    { icon: FaTwitter, url: "#", label: "X (Twitter)" },
-    { icon: FaInstagram, url: "#", label: "Instagram" },
-    { icon: FaYoutube, url: "#", label: "YouTube" },
-    { icon: FaTiktok, url: "#", label: "TikTok" },
+    { icon: FaGithub, url: "https://github.com/StrongAndMal", label: "GitHub" },
+    {
+      icon: FaLinkedin,
+      url: "https://www.linkedin.com/in/mauro-alvarado-480a9b16b/",
+      label: "LinkedIn",
+    },
+    {
+      icon: FaInstagram,
+      url: "https://www.instagram.com/strongandmal/",
+      label: "Instagram",
+    },
+    {
+      icon: FaYoutube,
+      url: "https://www.youtube.com/@StrongAndMal",
+      label: "YouTube",
+    },
+    {
+      icon: FaTiktok,
+      url: "https://www.tiktok.com/@strongandmal_",
+      label: "TikTok",
+    },
   ];
 
   return (
-    <footer className="bg-[#161616] text-white/60 relative">
+    <footer className="text-white/60 relative">
       {/* Back to top button */}
       {showBackToTop && (
         <button
@@ -128,7 +142,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="text-center mt-8 text-sm px-4">
-          <p>Designed and built with ❤️ by Mauro Alvarado</p>
+          <p>Built by Mauro Alvarado</p>
         </div>
       </div>
     </footer>

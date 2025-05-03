@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { RevealOnScroll } from "../RevealOnScroll";
-import emailjs from "emailjs-com";
+import emailjs from "@emailjs/browser";
 
 export const Contact = () => {
   const [formData, setFormData] = useState({
@@ -8,137 +8,106 @@ export const Contact = () => {
     email: "",
     message: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
+  const [status, setStatus] = useState(""); // "", "sending", "ok", "err"
 
-  const handleSubmit = async (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus(null);
+    setStatus("sending");
 
-    try {
-      const result = await emailjs.sendForm(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        e.target,
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-      );
+    // EmailJS Configuration
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-      if (result.status === 200) {
-        setSubmitStatus("success");
-        setFormData({
-          name: "",
-          email: "",
-          message: "",
-        });
-      } else {
-        setSubmitStatus("error");
-      }
-    } catch (error) {
-      console.error("Error sending email:", error);
-      setSubmitStatus("error");
-    } finally {
-      setIsSubmitting(false);
-    }
+    // EmailJS Template Parameters
+    const templateParams = {
+      from_name: formData.name,
+      from_email: formData.email,
+      to_name: "Mauro Alvarado",
+      message: formData.message,
+    };
+
+    emailjs
+      .send(serviceId, templateId, templateParams, publicKey)
+      .then((response) => {
+        console.log("Email sent successfully:", response);
+        setStatus("ok");
+        setFormData({ name: "", email: "", message: "" });
+      })
+      .catch((error) => {
+        console.error("Email sending failed:", error);
+        setStatus("err");
+      });
   };
 
   return (
     <section
       id="contact"
-      className="min-h-screen py-20 flex items-center justify-center bg-[#161616] text-white/80"
+      className="min-h-screen py-20 flex items-center justify-center text-white/80"
     >
       <div className="container mx-auto px-4 max-w-2xl">
         <h2 className="text-7xl font-bold mb-16 text-white text-center">
-          CONTACT
+          Let's Connect
         </h2>
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium mb-2 text-white"
-            >
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              required
-              className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-white/20 focus:outline-none text-white placeholder-white/40"
-              placeholder="Your name"
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <input
+            name="name"
+            placeholder="Name"
+            required
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-white/20 focus:outline-none text-white placeholder-white/40"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            required
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-white/20 focus:outline-none text-white placeholder-white/40"
+          />
+          <textarea
+            name="message"
+            rows="6"
+            placeholder="Message"
+            required
+            value={formData.message}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-white/20 focus:outline-none text-white placeholder-white/40"
+          ></textarea>
 
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium mb-2 text-white"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              required
-              className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-white/20 focus:outline-none text-white placeholder-white/40"
-              placeholder="your@email.com"
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="message"
-              className="block text-sm font-medium mb-2 text-white"
-            >
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              rows="6"
-              value={formData.message}
-              required
-              className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-white/20 focus:outline-none text-white placeholder-white/40"
-              placeholder="Your message"
-              onChange={(e) =>
-                setFormData({ ...formData, message: e.target.value })
-              }
-            ></textarea>
-          </div>
-
-          {submitStatus === "success" && (
-            <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg text-green-500">
-              Message sent successfully!
-            </div>
+          {status === "ok" && (
+            <p className="text-green-500">Message sent successfully!</p>
           )}
-
-          {submitStatus === "error" && (
-            <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-500">
+          {status === "err" && (
+            <p className="text-red-500">
               Failed to send message. Please try again.
-            </div>
+            </p>
           )}
 
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={status === "sending"}
             className={`w-full px-6 py-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors duration-300 ${
-              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+              status === "sending" ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            {isSubmitting ? "Sending..." : "Send Message"}
+            {status === "sending" ? "Sending..." : "Send Message"}
           </button>
         </form>
       </div>
     </section>
   );
 };
+
+export default Contact;

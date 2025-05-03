@@ -26,6 +26,7 @@ const images = [
 
 export const Home = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [hovered, setHovered] = useState(null);
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -48,68 +49,106 @@ export const Home = () => {
   return (
     <section
       id="home"
-      className="min-h-screen pt-24 flex items-center justify-center bg-[#161616] relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden"
     >
       <RevealOnScroll>
-        <div className="container mx-auto px-4 text-center relative">
-          <div className="mb-16 relative">
-            {/* Polaroid Container */}
-            <div className="relative inline-block transform -rotate-3 hover:rotate-0 transition-transform duration-300">
-              <div
-                className="bg-white p-2 shadow-2xl rounded-sm"
-                style={{
-                  boxShadow:
-                    "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)",
-                  transform: "rotateX(10deg)",
-                }}
-              >
-                <div className="relative">
-                  <img
-                    src={images[currentImageIndex].src}
-                    alt={images[currentImageIndex].caption}
-                    className="w-64 h-64 object-cover filter brightness-100 contrast-100"
-                  />
-                  <div className="absolute inset-0 shadow-inner"></div>
-                </div>
+        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between relative">
+          {/* Left: Text Content */}
+          <div className="flex-1 flex flex-col items-start justify-center md:pr-12">
+            {/* Name at the top */}
+
+            {/* Subtitle/Role */}
+            <div className="text-white/60 text-lg mb-2">
+              Jr Full Stack Engineer
+            </div>
+            {/* Greeting */}
+            <div className="text-4xl md:text-6xl font-bold text-white mb-2">
+              Hello, I'm
+            </div>
+            {/* Name (original style) */}
+            <div className="text-5xl md:text-7xl font-bold text-white mb-2 leading-tight">
+              <p style={{ color: "#6b9080" }}>Mauro Alvarado</p>
+            </div>
+            {/* Short Description */}
+            <div className="text-#ECEBE4 text-base md:text-lg mb-6 italic">
+              Crafting solutions with code, driven by purpose and passion.
+            </div>
+            {/* Animated Ticker Stats - horizontal, below description */}
+            <div className="w-full flex justify-center mt-10 mb-2">
+              <div className="flex gap-16 ticker-stats">
+                {[
+                  { number: "26", label: "Age" },
+                  { number: "3 Months", label: "Years of Experience" },
+                  { number: "5", label: "Projects Worked On" },
+                  { number: "3", label: "Projects Deployed" },
+                ].map((stat, idx) => (
+                  <div
+                    key={idx}
+                    className={`stat-card transition-all duration-300 text-center cursor-pointer`}
+                    onMouseEnter={() => setHovered(idx)}
+                    onMouseLeave={() => setHovered(null)}
+                    style={{
+                      filter:
+                        hovered === null
+                          ? "none"
+                          : hovered === idx
+                          ? "none"
+                          : "blur(8px)",
+                      opacity: hovered === null ? 1 : hovered === idx ? 1 : 0.5,
+                      transform: hovered === idx ? "scale(1.1)" : "scale(1)",
+                      zIndex: hovered === idx ? 10 : 1,
+                    }}
+                  >
+                    <div className="text-4xl font-bold text-white">
+                      {stat.number}
+                    </div>
+                    <div className="text-white/70 text-lg mt-1">
+                      {stat.label}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-
-            {/* Navigation Dots */}
-            <div className="flex justify-center gap-2 mt-4">
-              {images.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImageIndex(index)}
-                  className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                    index === currentImageIndex ? "bg-white" : "bg-white/30"
-                  }`}
-                />
-              ))}
-            </div>
-
-            {/* Navigation Buttons */}
-            <div className="absolute top-1/2 w-full flex justify-between -translate-y-1/2 px-4">
+            {/* Download CV and Socials (original style) */}
+          </div>
+          {/* Right: Profile Image */}
+          <div className="flex-1 flex flex-col items-center justify-center mt-12 md:mt-0">
+            <div className="relative group">
+              <img
+                src={images[currentImageIndex].src}
+                alt={images[currentImageIndex].caption}
+                className="w-64 h-80 object-cover bg-white border-8 border-white shadow-xl polaroid-img"
+              />
               <button
                 onClick={prevImage}
-                className="bg-white/10 hover:bg-white/20 rounded-full p-2 text-white transition-colors duration-300"
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-12 text-white/70 hover:text-white transition-colors text-3xl opacity-0 group-hover:opacity-100"
+                aria-label="Previous image"
               >
                 ←
               </button>
               <button
                 onClick={nextImage}
-                className="bg-white/10 hover:bg-white/20 rounded-full p-2 text-white transition-colors duration-300"
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-12 text-white/70 hover:text-white transition-colors text-3xl opacity-0 group-hover:opacity-100"
+                aria-label="Next image"
               >
                 →
               </button>
             </div>
+            <div className="flex gap-3 mt-6">
+              {images.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentImageIndex(idx)}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    idx === currentImageIndex
+                      ? "bg-white scale-125"
+                      : "bg-white/30 hover:bg-white/50"
+                  }`}
+                  aria-label={`Go to image ${idx + 1}`}
+                />
+              ))}
+            </div>
           </div>
-
-          <h1 className="text-6xl md:text-8xl font-bold mb-6 text-white">
-            Mauro Alvarado.
-          </h1>
-          <p className="text-xl md:text-2xl text-white/60 max-w-2xl mx-auto">
-            Junior Full Stack Developer | Fitness Enthusiast | Content Creator
-          </p>
         </div>
       </RevealOnScroll>
     </section>
