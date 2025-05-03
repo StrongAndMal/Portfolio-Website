@@ -1,0 +1,19 @@
+{
+  "name": "Mauro Alvarado - Portfolio",
+  "short_name": "Mauro's Portfolio",
+  "icons": [
+    {
+      "src": "/favicon/72ppi (STANDARD FOR WEB)/1/32px.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon/72ppi (STANDARD FOR WEB)/1/512px.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#161616",
+  "background_color": "#161616",
+  "display": "standalone"
+} 
