@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "outputDirectory": "dist",
+  "buildCommand": "cd Portfolio-website && npm install && npm run build",
+  "installCommand": "cd Portfolio-website && npm install",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
