@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/Portfolio-website/$1" }
+  ],
+  "buildCommand": "cd Portfolio-website && npm install && npm run build",
+  "outputDirectory": "Portfolio-website/dist"
+} 
