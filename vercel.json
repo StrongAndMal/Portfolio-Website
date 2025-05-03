@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "buildCommand": "cd Portfolio-website && npm install && npm run build",
-  "outputDirectory": "Portfolio-website/dist",
-  "framework": "vite"
-} 
