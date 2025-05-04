@@ -6,7 +6,7 @@ import path from "path";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/",
+  base: "./",
   build: {
     outDir: "dist",
     assetsDir: "assets",
@@ -24,6 +24,8 @@ export default defineConfig({
       },
       output: {
         manualChunks: undefined,
+        assetFileNames: "assets/[name].[ext]",
+        entryFileNames: "assets/[name].js",
       },
     },
   },
