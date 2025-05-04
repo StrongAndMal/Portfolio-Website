@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import { NavBar } from "./components/NavBar";
 import { Home } from "./components/sections/Home";
 import { About } from "./components/sections/About";
@@ -15,6 +16,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-background text-white">
+        <Analytics />
         <LoadingScreen />
         <NavBar />
         <main>
