@@ -135,7 +135,6 @@ export const Experience = () => {
       title: "High School Diploma",
       school: "Manual Arts Senior High",
       location: "Los Angeles",
-      description: "Graduated with a GPA of 3.0",
       isCurrent: false,
     },
   ];
