@@ -32,86 +32,81 @@ export const Home = () => {
   return (
     <section
       id="home"
-      className="min-h-screen flex items-center justify-center relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center relative overflow-x-hidden overflow-y-auto"
     >
       <RevealOnScroll>
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between relative">
+        <div className="container mx-auto px-2 sm:px-4 flex flex-col md:flex-row items-center justify-between relative w-full">
           {/* Left: Text Content */}
-          <div className="flex-1 flex flex-col items-start justify-center md:pr-12">
-            {/* Name at the top */}
-
+          <div className="flex-1 flex flex-col items-start justify-center md:pr-12 w-full md:w-auto">
             {/* Subtitle/Role */}
-            <div className="text-white/60 text-lg mb-2">
+            <div className="text-white/60 text-base sm:text-lg mb-2">
               Jr Full Stack Engineer
             </div>
             {/* Greeting */}
-            <div className="text-4xl md:text-6xl font-bold text-white mb-2">
+            <div className="text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-2">
               Hello, I'm
             </div>
             {/* Name (original style) */}
-            <div className="text-5xl md:text-7xl font-bold text-white mb-2 leading-tight">
+            <div className="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-2 leading-tight">
               <p style={{ color: "#6b9080" }}>Mauro Alvarado</p>
             </div>
             {/* Short Description */}
-            <div className="text-#ECEBE4 text-base md:text-lg mb-6 italic">
+            <div className="text-#ECEBE4 text-sm sm:text-base md:text-lg mb-6 italic">
               Crafting solutions with code, driven by purpose and passion.
             </div>
             {/* Animated Ticker Stats - horizontal, below description */}
-            <div className="w-full flex justify-center mt-10 mb-2">
-              <div className="flex gap-16 ticker-stats">
-                {[
-                  { number: "26", label: "Age" },
-                  { number: "3 Months", label: "Years of Experience" },
-                  { number: "5", label: "Projects Worked On" },
-                  { number: "3", label: "Projects Deployed" },
-                ].map((stat, idx) => (
-                  <div
-                    key={idx}
-                    className={`stat-card transition-all duration-300 text-center cursor-pointer`}
-                    onMouseEnter={() => setHovered(idx)}
-                    onMouseLeave={() => setHovered(null)}
-                    style={{
-                      filter:
-                        hovered === null
-                          ? "none"
-                          : hovered === idx
-                          ? "none"
-                          : "blur(8px)",
-                      opacity: hovered === null ? 1 : hovered === idx ? 1 : 0.5,
-                      transform: hovered === idx ? "scale(1.1)" : "scale(1)",
-                      zIndex: hovered === idx ? 10 : 1,
-                    }}
-                  >
-                    <div className="text-4xl font-bold text-white">
-                      {stat.number}
-                    </div>
-                    <div className="text-white/70 text-lg mt-1">
-                      {stat.label}
-                    </div>
+            <div className="w-full flex flex-col sm:flex-row justify-center items-center mt-6 sm:mt-10 mb-2 gap-6 sm:gap-16">
+              {[
+                { number: "26", label: "Age" },
+                { number: "3 Months", label: "Years of Experience" },
+                { number: "5", label: "Projects Worked On" },
+                { number: "3", label: "Projects Deployed" },
+              ].map((stat, idx) => (
+                <div
+                  key={idx}
+                  className={`stat-card transition-all duration-300 text-center cursor-pointer px-2`}
+                  onMouseEnter={() => setHovered(idx)}
+                  onMouseLeave={() => setHovered(null)}
+                  style={{
+                    filter:
+                      hovered === null
+                        ? "none"
+                        : hovered === idx
+                        ? "none"
+                        : "blur(8px)",
+                    opacity: hovered === null ? 1 : hovered === idx ? 1 : 0.5,
+                    transform: hovered === idx ? "scale(1.1)" : "scale(1)",
+                    zIndex: hovered === idx ? 10 : 1,
+                  }}
+                >
+                  <div className="text-2xl sm:text-4xl font-bold text-white">
+                    {stat.number}
                   </div>
-                ))}
-              </div>
+                  <div className="text-white/70 text-base sm:text-lg mt-1">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
             </div>
-            {/* Download CV and Socials (original style) */}
           </div>
           {/* Right: Profile Image */}
-          <div className="flex-1 flex flex-col items-center justify-center mt-12 md:mt-0">
-            <div className="relative group">
+          <div className="flex-1 flex flex-col items-center justify-center mt-8 md:mt-0 w-full md:w-auto">
+            <div className="relative group w-56 h-72 sm:w-64 sm:h-80">
               <img
                 src={images[currentImageIndex]}
                 alt={`Image ${currentImageIndex + 1}`}
-                className="w-64 h-80 object-cover bg-white border-8 border-white shadow-xl polaroid-img"
+                className="w-full h-full object-cover bg-white border-8 border-white shadow-xl polaroid-img rounded-lg"
               />
               <button
                 onClick={prevImage}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-12 text-white/70 hover:text-white transition-colors text-3xl opacity-0 group-hover:opacity-100"
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-8 sm:-translate-x-12 text-white/70 hover:text-white transition-colors text-2xl sm:text-3xl opacity-0 group-hover:opacity-100"
                 aria-label="Previous image"
               >
                 ←
               </button>
               <button
                 onClick={nextImage}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-12 text-white/70 hover:text-white transition-colors text-3xl opacity-0 group-hover:opacity-100"
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-8 sm:translate-x-12 text-white/70 hover:text-white transition-colors text-2xl sm:text-3xl opacity-0 group-hover:opacity-100"
                 aria-label="Next image"
               >
                 →

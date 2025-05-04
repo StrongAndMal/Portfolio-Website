@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 export const LoadingScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentText, setCurrentText] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const intervalRef = useRef(null);
+  const timeoutRef = useRef(null);
 
   const texts = [
     "Hey there!",
@@ -17,22 +19,20 @@ export const LoadingScreen = () => {
   ];
 
   useEffect(() => {
-    const textInterval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       setCurrentText((prev) => (prev + 1) % texts.length);
     }, 1000);
 
-    const loadingTimer = setTimeout(() => {
-      // Start fade out animation
+    timeoutRef.current = setTimeout(() => {
       setIsVisible(false);
-      // Remove component after animation completes
       setTimeout(() => {
         setIsLoading(false);
-      }, 1000); // Match this with the CSS transition duration
+      }, 1000);
     }, 7000);
 
     return () => {
-      clearInterval(textInterval);
-      clearTimeout(loadingTimer);
+      clearInterval(intervalRef.current);
+      clearTimeout(timeoutRef.current);
     };
   }, []);
 
@@ -40,7 +40,9 @@ export const LoadingScreen = () => {
     setIsVisible(false);
     setTimeout(() => {
       setIsLoading(false);
-    }, 1000); // Match this with the CSS transition duration
+    }, 1000);
+    clearInterval(intervalRef.current);
+    clearTimeout(timeoutRef.current);
   };
 
   if (!isLoading) return null;
@@ -52,14 +54,14 @@ export const LoadingScreen = () => {
       }`}
       onClick={handleClick}
     >
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-white">
-          <span className="inline-block animate-fade-in-out overflow-hidden whitespace-nowrap">
+      <div className="text-center px-4 w-full max-w-xs sm:max-w-md md:max-w-lg">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white break-words">
+          <span className="inline-block animate-fade-in-out overflow-hidden whitespace-normal">
             {texts[currentText]}
           </span>
         </h1>
-        <p className="mt-4 text-white/60 text-sm transition-opacity duration-300 ease-in-out">
-          Click anywhere to skip
+        <p className="mt-4 text-white/60 text-xs sm:text-sm md:text-base transition-opacity duration-300 ease-in-out">
+          Tap anywhere to skip
         </p>
       </div>
     </div>

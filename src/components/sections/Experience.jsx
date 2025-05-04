@@ -2,6 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { RevealOnScroll } from "../RevealOnScroll";
 import confetti from "canvas-confetti";
 
+// Utility to detect mobile devices
+const isMobileDevice = () =>
+  typeof window !== "undefined" &&
+  /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    window.navigator.userAgent
+  );
+
 export const Experience = () => {
   const [hasPlayedConfetti, setHasPlayedConfetti] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
@@ -156,16 +163,17 @@ export const Experience = () => {
       setActiveIndex(closestIndex);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll(); // Initialize on mount
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Trigger confetti via IntersectionObserver on current job node
+  // Trigger confetti via IntersectionObserver on current job node (desktop only)
   useEffect(() => {
     if (hasPlayedConfetti) return;
     if (!currentJobNodeRef.current) return;
+    if (isMobileDevice()) return; // Disable confetti on mobile
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -198,18 +206,20 @@ export const Experience = () => {
   return (
     <section
       id="experience"
-      className="min-h-screen py-24 relative overflow-hidden"
+      className="min-h-screen py-16 sm:py-24 relative overflow-x-hidden overflow-y-auto"
     >
-      <div className="container mx-auto px-4">
-        <h2 className="text-7xl font-bold mb-16 text-white">My Experience</h2>
+      <div className="container mx-auto px-2 sm:px-4">
+        <h2 className="text-3xl sm:text-5xl md:text-7xl font-bold mb-8 sm:mb-16 text-white text-center">
+          My Experience
+        </h2>
 
-        <div className="relative">
+        <div className="relative flex flex-col sm:flex-row">
           {/* Tree line path with glow effect */}
-          <div className="absolute left-8 top-0 bottom-0 w-1 bg-white/10"></div>
+          <div className="hidden sm:block absolute left-8 top-0 bottom-0 w-1 bg-white/10"></div>
           <div
-            className="absolute left-8 top-0 w-1 bg-white/30 z-10 timeline-progress-indicator transition-all duration-300"
+            className="hidden sm:block absolute left-8 top-0 w-1 bg-white/30 z-10 timeline-progress-indicator transition-all duration-300"
             style={{
-              height: `${
+              height: `$ {
                 activeIndex !== null
                   ? ((activeIndex + 1) / chronologicalExperiences.length) * 100
                   : 0
@@ -218,16 +228,16 @@ export const Experience = () => {
             }}
           ></div>
 
-          <div className="space-y-16 pl-16">
+          <div className="flex flex-col gap-8 sm:gap-16 pl-0 sm:pl-16 w-full">
             {chronologicalExperiences.map((exp, index) => (
               <div
                 key={index}
-                className="relative group"
+                className="relative group flex flex-col sm:flex-row"
                 ref={exp.isCurrent ? currentJobNodeRef : null}
               >
                 {/* Tree node with glow effect for active node */}
                 <div
-                  className={`timeline-node absolute -left-16 top-6 w-8 h-8 rounded-full 
+                  className={`timeline-node static sm:absolute sm:-left-16 left-1/2 sm:translate-x-0 -translate-x-1/2 top-6 sm:top-6 w-6 h-6 sm:w-8 sm:h-8 rounded-full 
                     ${activeIndex === index ? "bg-white/30" : "bg-white/10"} 
                     transition-all duration-300 flex items-center justify-center
                     ${activeIndex === index ? "shadow-glow" : ""}
@@ -240,7 +250,7 @@ export const Experience = () => {
                   }}
                 >
                   <div
-                    className={`w-4 h-4 rounded-full 
+                    className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full 
                       ${activeIndex === index ? "bg-white/70" : "bg-white/20"} 
                       transition-all duration-300`}
                   ></div>
@@ -249,7 +259,7 @@ export const Experience = () => {
                 {/* Content with animation */}
                 <RevealOnScroll>
                   <div
-                    className={`bg-white/5 backdrop-blur-sm p-6 rounded-lg border 
+                    className={`bg-white/5 backdrop-blur-sm p-4 sm:p-6 rounded-lg border 
                     ${
                       activeIndex === index
                         ? "border-white/30"
@@ -260,20 +270,20 @@ export const Experience = () => {
                       exp.isCurrent
                         ? "ring-2 ring-white/30 ring-offset-2 ring-offset-[#161616]"
                         : ""
-                    }`}
+                    } w-full`}
                   >
-                    <div className="flex items-center gap-4 mb-2">
-                      <span className="text-xl font-bold text-white/60">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-2">
+                      <span className="text-lg sm:text-xl font-bold text-white/60">
                         {exp.year}
                       </span>
                       {exp.isCurrent && (
-                        <span className="px-3 py-1 text-sm font-medium bg-white/10 text-white rounded-full animate-pulse">
+                        <span className="px-2 sm:px-3 py-1 text-xs sm:text-sm font-medium bg-white/10 text-white rounded-full animate-pulse">
                           I am here!
                         </span>
                       )}
                     </div>
 
-                    <h3 className="text-xl font-bold text-white mb-1">
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-1">
                       {exp.title}
                     </h3>
                     <p className="text-white/60 mb-1">{exp.company}</p>
@@ -281,7 +291,7 @@ export const Experience = () => {
                       <p className="text-white/40 mb-2">{exp.location}</p>
                     )}
 
-                    <p className="text-white/80 mb-3 text-sm">
+                    <p className="text-white/80 mb-3 text-xs sm:text-sm">
                       {exp.description}
                     </p>
 
@@ -302,32 +312,36 @@ export const Experience = () => {
           </div>
         </div>
 
-        <h2 className="text-7xl font-bold mt-24 mb-16 text-white">
+        <h2 className="text-3xl sm:text-5xl md:text-7xl font-bold mt-16 mb-8 sm:mb-16 text-white text-center">
           My Education
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
           {education.map((edu, index) => (
             <div
               key={index}
-              className="bg-white/5 border border-white/10 rounded-2xl shadow-md p-8 transition-all duration-300 hover:scale-105 hover:border-white/30 hover:shadow-lg group cursor-pointer"
+              className="bg-white/5 border border-white/10 rounded-2xl shadow-md p-4 sm:p-8 transition-all duration-300 hover:scale-105 hover:border-white/30 hover:shadow-lg group cursor-pointer"
             >
-              <div className="flex items-center gap-4 mb-2">
-                <span className="text-xl font-bold text-white/60">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-2">
+                <span className="text-lg sm:text-xl font-bold text-white/60">
                   {edu.year}
                 </span>
                 {edu.isCurrent && (
-                  <span className="px-3 py-1 text-sm font-medium bg-white/10 text-white rounded-full animate-pulse">
+                  <span className="px-2 sm:px-3 py-1 text-xs sm:text-sm font-medium bg-white/10 text-white rounded-full animate-pulse">
                     Currently Studying
                   </span>
                 )}
               </div>
-              <h3 className="text-xl font-bold text-white mb-1">{edu.title}</h3>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-1">
+                {edu.title}
+              </h3>
               <p className="text-white/60 mb-1">{edu.school}</p>
               {edu.location && (
                 <p className="text-white/40 mb-2">{edu.location}</p>
               )}
-              <p className="text-white/80 text-sm">{edu.description}</p>
+              <p className="text-white/80 text-xs sm:text-sm">
+                {edu.description}
+              </p>
             </div>
           ))}
         </div>
