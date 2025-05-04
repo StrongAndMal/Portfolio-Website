@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import { NavBar } from "./components/NavBar";
 import { Home } from "./components/sections/Home";
@@ -14,30 +14,39 @@ import Footer from "./components/sections/Footer";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/">
       <div className="min-h-screen bg-background text-white">
         <Analytics />
         <LoadingScreen />
         <NavBar />
         <main>
-          <RevealOnScroll>
-            <Home />
-          </RevealOnScroll>
-          <RevealOnScroll>
-            <About />
-          </RevealOnScroll>
-          <RevealOnScroll>
-            <Experience />
-          </RevealOnScroll>
-          <RevealOnScroll>
-            <Projects />
-          </RevealOnScroll>
-          <RevealOnScroll>
-            <Contact />
-          </RevealOnScroll>
-          <RevealOnScroll>
-            <Footer />
-          </RevealOnScroll>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <RevealOnScroll>
+                    <Home />
+                  </RevealOnScroll>
+                  <RevealOnScroll>
+                    <About />
+                  </RevealOnScroll>
+                  <RevealOnScroll>
+                    <Experience />
+                  </RevealOnScroll>
+                  <RevealOnScroll>
+                    <Projects />
+                  </RevealOnScroll>
+                  <RevealOnScroll>
+                    <Contact />
+                  </RevealOnScroll>
+                  <RevealOnScroll>
+                    <Footer />
+                  </RevealOnScroll>
+                </>
+              }
+            />
+          </Routes>
         </main>
       </div>
     </BrowserRouter>
